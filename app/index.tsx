@@ -1,5 +1,5 @@
 import Background from '@/assets/svg/background.svg';
-import { Button } from '@/components/buttons';
+import { Button } from '@/components/button';
 import { Image } from "expo-image";
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';

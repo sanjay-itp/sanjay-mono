@@ -9,7 +9,8 @@ export function InputField({ label, style: inputStyle, error, ...props }: Props)
     return (
         <View>
             <Text>{label}</Text>
-            <TextInput style={[styles.input, inputStyle]} {...props} />
+            <TextInput placeholderTextColor={"black"} style={[styles.input, inputStyle]} {...props} />
+
             {error && <Text style={styles.error}>{error}</Text>}
         </View>
     )
@@ -18,8 +19,15 @@ export function InputField({ label, style: inputStyle, error, ...props }: Props)
 const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
+        color: 'black',
         borderColor: 'gray',
         padding: 10,
+    },
+    label: {
+        fontSize: 12,
+        fontWeight: '700',
+        marginBottom: 5,
+        color:"black"
     },
     error: {
         color: 'red',

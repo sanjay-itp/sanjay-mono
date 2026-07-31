@@ -1,10 +1,12 @@
-import react from 'react';
-import { Button } from '@/components/buttons';
-import {StyleSheet, View, Text} from 'react-native';
-import {AntDesign} from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Background from '@/assets/svg/background.svg';
+import { Button } from '@/components/button';
 import { InputField } from '@/components/input';
+import { AntDesign } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const style=StyleSheet.create({
     container: {
@@ -38,7 +40,7 @@ const style=StyleSheet.create({
         borderWidth: 2,
         borderRadius: 10,
         marginBottom: 15,
-        color: "black",
+        // color: "white",
         width: "95%",
     }, 
     place:{
@@ -80,10 +82,17 @@ const style=StyleSheet.create({
     },
 
     
-})
+});
 
 
-export default function Login() {
+export default function Signup() {
+    const router = useRouter();
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isloading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
     return (
         <View style={style.container}>
         <Background/>
@@ -96,7 +105,7 @@ export default function Login() {
             <Text style={style.subhead}>Join to start tracking your finances</Text>
         </View>
         <View style={style.place}>
-            <InputField placeholder="Jane Doe"  label='Full Name' style={style.inputs}/>
+            <InputField placeholder="jane Doe"  label='Full Name' style={style.inputs}/>
             <InputField placeholder="jane.doe@example.com" label='Email Address' style={style.inputs}/>
             <InputField placeholder="Create a strong password" label='Password' style={style.inputs}/>
         </View>
@@ -107,3 +116,4 @@ export default function Login() {
     </View>
     )
 }
+
