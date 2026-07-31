@@ -1,8 +1,8 @@
-import { Text, StyleSheet, View } from 'react-native';
-import { Image } from "expo-image";
 import Background from '@/assets/svg/background.svg';
 import { Button } from '@/components/buttons';
+import { Image } from "expo-image";
 import { useRouter } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const styles = StyleSheet.create({
     container:{
@@ -59,8 +59,8 @@ export default function Index() {
         style={styles.logo} />
     </View>
       <SafeAreaView>
-          <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/tabs/profile')}/>
-            <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt}>Log in</Text></Text>
+          <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/signup')}/>
+            <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt} onPress= {() => router.push('/login')}>Log in</Text></Text>
       </SafeAreaView>
     </View>
   )
