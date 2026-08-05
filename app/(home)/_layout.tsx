@@ -1,14 +1,15 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { auth } from '@/services/firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Octicons from '@expo/vector-icons/Octicons';
+import { Redirect, Tabs } from 'expo-router';
+import React from 'react';
 export default function TabLayout() {
-return (
-  <Tabs
+  if(!auth.currentUser) {
+    return <Redirect href='/' />
+  }
+  return (
+    <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#4B918C',
@@ -59,4 +60,5 @@ return (
         }}
       />
     </Tabs>
-); }
+  );
+}

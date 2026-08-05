@@ -1,119 +1,137 @@
-import Background from '@/assets/svg/background.svg';
-import { Button } from '@/components/button';
-import { InputField } from '@/components/input';
-import { AntDesign } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, View } from "react-native";
 
+import Background from "@/assets/svg/background.svg";
+import { BackButton } from "@/components/back-button";
+import { Button } from "@/components/button";
+import { InputField } from "@/components/input";
+import { signUp } from "@/services/firebaseConfig";
+import { Link, useRouter } from "expo-router";
+import { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
-const style=StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
-    flex: 1,
-    backgroundColor: "#ffffff"
-  },
-  top:{
-    position: "absolute",
-    top: 50,
-    left: 20,
-  },
-  topContainer:{
-    position: "absolute",
-    top: 90,
-    left: 40,
-  },
-    heading:{ 
-        fontSize: 30,
-      fontWeight: '600',
-      color: "black",
-      
+        flex: 1,
+        backgroundColor: "#fff",
     },
-    subhead:{
-        fontSize: 17,
-        color:"#5A8C88",
-        paddingTop: 10,
+    actionContainer: {
+        padding: 18,
     },
-    inputs:{
-        marginTop: 15,
-        borderColor: "#C8EDEA",
-        borderWidth: 2,
-        borderRadius: 10,
-        marginBottom: 15,
-        // color: "white",
-        width: "95%",
-    }, 
-    place:{
+    logo: {
         position: "absolute",
-        top: 250,
-        alignSelf: "center",
-        width: "90%",
-        padding: 10,
-        left: 20,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
-    button:{
-    backgroundColor:"#549B96",
-    // paddingVertical: 12,
-    // margin:10,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor:"black",
-    borderWidth:1,
-    boxShadow: "0px 6px 16px -3px rgba(0,0,0,0.46)",
-    height:55,
-    alignSelf:'center',
-    width:'90%',
-    marginTop:0,
-    padding: 10,
-    position : "absolute",
+    formContainer: {
+        padding: 18,
+        gap: 24,
     },
-    buttonTitle: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: 'bold',
-    }, 
-    textblwbtn:{
-    marginTop:10,
-    textAlign:"center",
-    fontSize:14,},
-    logintxt:{
-      color:"#428581",
+    headerContainer: {
+        paddingHorizontal: 14,
     },
-
-    
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: '600',
+        color: '#000000',
+    },
+    headerSubtitle: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#5A8C88',
+        marginTop: 8,
+    },
+    loginContainer: {
+        alignItems: "center",
+        marginTop: 8,
+        flexDirection: "row",
+        justifyContent: 'center',
+    },
+    loginText: {
+        color: "#444444",
+        fontSize: 16,
+    },
+    loginTextLink: {
+        color: "#438883",
+        fontSize: 16,
+        textDecorationLine: "underline",
+    },
 });
 
-
 export default function Signup() {
-    const router = useRouter();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isloading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [fieldsError, setFieldsError] = useState({
+        fullName: '',
+        email: '',
+        password: '',
+    });
+
+    const router = useRouter();
+
+    const handleSignUp = async () => {
+        try {
+            if (!fullName || !email || !password) {
+                setFieldsError({
+                    fullName: !fullName ? 'Full name is required' : '',
+                    email: !email ? 'Email is required' : '',
+                    password: !password ? 'Password is required' : '',
+                });
+                return;
+            }
+            setFieldsError({
+                fullName: '',
+                email: '',
+                password: '',
+            });
+            setIsLoading(true);
+            await signUp(fullName, email, password);
+            router.push('/login');
+            Toast.show({
+                type: 'success',
+                text1: 'Account created successfully',
+            })
+        } catch (error) {
+            console.log(error);
+            setError(error as string);
+            Toast.show({
+                type: 'error',
+                text1: error as string,
+            })
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
 
     return (
-        <View style={style.container}>
-        <Background/>
-        <View style={style.top}>
-            <AntDesign name="left" size={24} color="black" />
+        <View style={styles.container}>
+            <View style={styles.logo}>
+                <Background />
+            </View>
+            <SafeAreaView>
+                <BackButton />
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headerTitle}>Create</Text>
+                    <Text style={styles.headerTitle}>Account ✨</Text>
+                    <Text style={styles.headerSubtitle}>Join to start tracking your finances</Text>
+                </View>
+                <View style={styles.formContainer}>
+                    <InputField label="Full Name" placeholder="Enter your full name" value={fullName} onChangeText={setFullName} error={fieldsError.fullName} />
+                    <InputField label="Email" autoCapitalize="none" placeholder="Enter your email" value={email} onChangeText={setEmail} error={fieldsError.email} />
+                    <InputField label="Password" autoCapitalize="none" placeholder="Enter your password" value={password} onChangeText={setPassword} secureTextEntry error={fieldsError.password} />
+                    <Button title="Create Account" type="primary" onPress={handleSignUp} disabled={isLoading} loading={isLoading} />
+                    <View style={styles.loginContainer}>
+                        <Text style={styles.loginText}>Already have account? </Text>
+                        <Link href="/login" style={styles.loginTextLink}>Log In</Link>
+                    </View>
+                </View>
+            </SafeAreaView>
         </View>
-        <View style={style.topContainer}>
-            <Text style={style.heading}>Create</Text>
-            <Text style={style.heading}>Account ✨</Text>
-            <Text style={style.subhead}>Join to start tracking your finances</Text>
-        </View>
-        <View style={style.place}>
-            <InputField placeholder="jane Doe"  label='Full Name' style={style.inputs}/>
-            <InputField placeholder="jane.doe@example.com" label='Email Address' style={style.inputs}/>
-            <InputField placeholder="Create a strong password" label='Password' style={style.inputs}/>
-        </View>
-        <SafeAreaView>
-            <Button title="Create Accoount" type="primary" style={style.button} textStyle={style.buttonTitle} />
-            <Text style={style.textblwbtn}>Already have an account? <Text style={style.logintxt}>Login</Text></Text>
-        </SafeAreaView>
-    </View>
-    )
+    );
 }
-

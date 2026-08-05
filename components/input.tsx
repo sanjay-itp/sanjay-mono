@@ -1,36 +1,57 @@
-import { StyleSheet, Text, TextInput, TextInputProps, View } from "react-native"
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useState } from "react";
+import { StyleSheet, Text, TextInput, TextInputProps, TouchableOpacity, View } from "react-native";
 
 type Props = TextInputProps & {
     label?: string
     error?: string
 }
 
-export function InputField({ label, style: inputStyle, error, ...props }: Props) {
+export function InputField({ label, style: inputStyle, error, secureTextEntry, ...props }: Props) {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
     return (
-        <View>
-            <Text>{label}</Text>
-            <TextInput placeholderTextColor={"black"} style={[styles.input, inputStyle]} {...props} />
-
+        <View style={styles.container}>
+            <Text style={styles.label}>{label}</Text>
+            <View style={[styles.inputContainer]}>
+                <TextInput style={[styles.input, inputStyle]} secureTextEntry={isPasswordVisible} {...props} />
+                {secureTextEntry && (
+                    <TouchableOpacity style={styles.inputSuffix} onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                        <Ionicons name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="#5A8C88" />
+                    </TouchableOpacity>
+                )}
+            </View>
             {error && <Text style={styles.error}>{error}</Text>}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    input: {
-        borderWidth: 1,
-        color: 'black',
-        borderColor: 'gray',
-        padding: 10,
+    container: {
+        gap: 6,
     },
-    label: {
-        fontSize: 12,
-        fontWeight: '700',
-        marginBottom: 5,
-        color:"black"
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderWidth: 1,
+        borderColor: '#C8EDEA',
+        borderRadius: 8,
+        backgroundColor: '#F0FAF9',
+    },
+    input: {
+        minHeight: 45, 
+        paddingHorizontal: 8,
+    },
+    inputSuffix: {
+        paddingHorizontal: 8,
     },
     error: {
         color: 'red',
         fontSize: 12,
+    },
+    label: {
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#5A8C88',
     },
 })

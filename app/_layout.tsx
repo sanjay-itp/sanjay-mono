@@ -1,6 +1,9 @@
+import { initializeFirebase } from '@/services/firebaseConfig';
 import { Stack } from 'expo-router';
 import 'react-native-reanimated';
-import { StackScreen } from 'react-native-screens';
+import Toast from "react-native-toast-message";
+
+const { auth } = initializeFirebase()
 
 
 export const unstable_settings = {
@@ -9,9 +12,12 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
+      <>
       <Stack screenOptions={{headerShown: false}}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="tabs" options={{ headerShown: false }} />
+        <Stack.Screen name="(home)" options={{ headerShown: false }} />
       </Stack>
+      <Toast/>
+      </>
   );
 }

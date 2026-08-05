@@ -1,35 +1,34 @@
 import Background from '@/assets/svg/background.svg';
 import { Button } from '@/components/button';
+import { auth } from '@/services/firebaseConfig';
 import { Image } from "expo-image";
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:"#fff"
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
   logo: {
     position: "absolute",
     top: 100,
-    right:10,
-    left:0,
-    bottom:0
+    right: 10,
+    left: 0,
+    bottom: 0
   },
-  button:{
-    backgroundColor:"#549B96",
-    // paddingVertical: 12,
-    // margin:10,
+  button: {
+    backgroundColor: "#549B96",
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor:"black",
-    borderWidth:1,
+    borderColor: "black",
+    borderWidth: 1,
     boxShadow: "0px 6px 16px -3px rgba(0,0,0,0.46)",
-    height:55,
-    alignSelf:'center',
-    width:'90%',
-    marginTop:50,
+    height: 55,
+    alignSelf: 'center',
+    width: '90%',
+    marginTop: 50,
 
   },
   buttonTitle: {
@@ -37,30 +36,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  textblwbtn:{
-    marginTop:10,
-    textAlign:"center",
-    fontSize:14,},
-    logintxt:{
-      color:"#428581",
-    }
+  textblwbtn: {
+    marginTop: 10,
+    textAlign: "center",
+    fontSize: 14,
+  },
+  logintxt: {
+    color: "#428581",
+  }
 });
 
 
 
 export default function Index() {
   const router = useRouter();
+  if(auth.currentUser) {
+    return <Redirect href='/(home)/hoempage' />
+  }
   return (
     <View>
-    <View>
-      <Background/>
-       <Image
-        source={require('@/assets/svg/model.png')}
-        style={styles.logo} />
-    </View>
+      <View>
+        <Background />
+        <Image
+          source={require('@/assets/svg/model.png')}
+          style={styles.logo} />
+      </View>
       <SafeAreaView>
-          <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/signup')}/>
-            <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt} onPress= {() => router.push('/login')}>Log in</Text></Text>
+        <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/signup')} />
+        <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt} onPress={() => router.push('/login')}>Log in</Text></Text>
       </SafeAreaView>
     </View>
   )

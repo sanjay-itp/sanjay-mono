@@ -1,13 +1,11 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { createUserWithEmailAndPassword, getAuth , signInWithEmailAndPassword } from "firebase/auth";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { FirebaseApp, getApp, getApps, initializeApp } from "firebase/app";
+import { Auth, createUserWithEmailAndPassword, getAuth, initializeAuth, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+const firebaseAuth = require("firebase/auth");
+const persistence = typeof firebaseAuth?.getReactNativePersistence === "function" ? firebaseAuth.getReactNativePersistence(ReactNativeAsyncStorage) : undefined;
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
   apiKey: "AIzaSyAaNu7DS4tn1mPZDB1T5CGozuQssagSuV0",
   authDomain: "flux-114af.firebaseapp.com",
@@ -18,15 +16,40 @@ const firebaseConfig = {
   measurementId: "G-SM8WFXL0WP"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
 
-export function signInWithPopup(email: string, password: string) {
-    return createUserWithEmailAndPassword(auth, email, password);
+let app: FirebaseApp | null = null;
+let auth: Auth;
+// Initialize Firebase
+export function initializeFirebase() {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  try {
+    auth = initializeAuth(app, { persistence });
+  } catch (error) {
+    console.error("Error initializing auth", error);
+    auth = getAuth(app);
+  }
+  return { app, auth };
 }
 
-export function signIn(email: string, password: string){
+
+export async function signUp(fullName: string, email: string, password: string) {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+  await updateProfile(userCredential.user, { displayName: fullName })
+  return userCredential;
+}
+
+
+export function signIn(email: string, password: string) {
   return signInWithEmailAndPassword(auth, email, password);
 }
+
+export function getCurrentUser() {
+  return auth.currentUser;
+}
+
+export function signOut() {
+  return signOut();
+}
+
+export { app, auth };
+
