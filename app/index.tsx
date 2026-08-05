@@ -1,70 +1,67 @@
-import Background from '@/assets/svg/background.svg';
-import { Button } from '@/components/button';
-import { auth } from '@/services/firebaseConfig';
 import { Image } from "expo-image";
-import { Redirect, useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  },
-  logo: {
-    position: "absolute",
-    top: 100,
-    right: 10,
-    left: 0,
-    bottom: 0
-  },
-  button: {
-    backgroundColor: "#549B96",
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: "black",
-    borderWidth: 1,
-    boxShadow: "0px 6px 16px -3px rgba(0,0,0,0.46)",
-    height: 55,
-    alignSelf: 'center',
-    width: '90%',
-    marginTop: 50,
+import { StyleSheet, Text, View } from "react-native";
 
-  },
-  buttonTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  textblwbtn: {
-    marginTop: 10,
-    textAlign: "center",
-    fontSize: 14,
-  },
-  logintxt: {
-    color: "#428581",
-  }
+import Background from "@/assets/svg/background.svg";
+import { Button } from "@/components/button";
+import { auth } from "@/services/firebaseConfig";
+import { Link, Redirect, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        justifyContent: "space-between",
+    },
+    actionContainer: {
+        padding: 18,
+    },
+    logo: {
+        position: "absolute",
+        top: 100,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    loginContainer: {
+        alignItems: "center",
+        marginTop: 20,
+        flexDirection: "row",
+        justifyContent: 'center',
+    },
+    loginText: {
+        color: "#444444",
+        fontSize: 16,
+    },
+    loginTextLink: {
+        color: "#438883",
+        fontSize: 16,
+        textDecorationLine: "underline",
+    },
 });
 
-
-
 export default function Index() {
-  const router = useRouter();
-  if(auth.currentUser) {
-    return <Redirect href='/(home)/hoempage' />
-  }
-  return (
-    <View>
-      <View>
-        <Background />
-        <Image
-          source={require('@/assets/svg/model.png')}
-          style={styles.logo} />
-      </View>
-      <SafeAreaView>
-        <Button title="Get Started" type="primary" style={styles.button} textStyle={styles.buttonTitle} onPress={() => router.push('/signup')} />
-        <Text style={styles.textblwbtn}>Already have an account? <Text style={styles.logintxt} onPress={() => router.push('/login')}>Log in</Text></Text>
-      </SafeAreaView>
-    </View>
-  )
+    const router = useRouter();
+
+    if (auth.currentUser) {
+      return <Redirect href="/(home)/hoempage" />;
+    }
+
+    return (
+        <View style={styles.container}>
+            <View>
+                <Background />
+                <Image
+                    source={require('../assets/svg/onboarding.png')}
+                    style={styles.logo} />
+            </View>
+            <SafeAreaView edges={["bottom"]} style={styles.actionContainer}>
+                <Button title="Get Started" type="primary" onPress={() => router.push('/signup')} />
+                <View style={styles.loginContainer}>
+                    <Text style={styles.loginText}>Already have account? </Text>
+                    <Link href="/login" style={styles.loginTextLink}>Log In</Link>
+                </View>
+            </SafeAreaView>
+        </View>
+    );
 }
